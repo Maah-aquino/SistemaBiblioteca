@@ -1,13 +1,16 @@
 from usuarios import Usuario
 from biblioteca import Biblioteca
 from livro import Livro
+import biblioteca
 import os
 
 class Funcionario(Usuario):
-    def __init__(self, nome, cpf, email, telefone, id, tipo_de_usuario, senha, arquivo="Cadastro.txt"):
-        super().__init__(nome, cpf, email, telefone, id, tipo_de_usuario, senha)
+    def __init__(self, nome, cpf, email, telefone, id, tipo_de_usuario, senha, autenticado = False, arquivo="Cadastro.txt"):
+        super().__init__(nome, cpf, email, telefone, id, tipo_de_usuario, senha, autenticado = False)
         self.Cadastro = []
         self.arquivo = arquivo
+        self.carregar_usuarios()
+        self._tipo_de_usuario = tipo_de_usuario
 
     def cadastrar_livro(self, biblioteca):
         titulo = input("Título: ")
@@ -54,6 +57,24 @@ class Funcionario(Usuario):
         for usuario in self.Cadastro:
             print(f"Nome: {usuario.get_nome()}, CPF: {usuario.get_cpf()}, Email: {usuario.get_email()}, Telefone: {usuario.get_telefone()}, ID: {usuario.get_id()}, Tipo de Usuário: {usuario.get_tipo_usuario()}, Senha: {usuario.get_senha()}")
 
+    def remover_livro(self, biblioteca): 
+        titulo = input("Digite o título do livro que deseja remover: ") 
+        biblioteca.remover_livro(titulo)
+
+    def remover_usuario(self, input_cpf):
+        usuario_removido = False 
+        for usuario in self.Cadastro:
+            if usuario.get_cpf() == input_cpf:  #
+                self.Cadastro.remove(usuario) 
+                usuario_removido = True 
+                self.Salvar_Cadastro()  
+                print(f"O usuário '{usuario.get_nome()}' foi removido com sucesso.")  
+                break  
+
+            else:
+                print(f"Usuário com CPF '{input_cpf}' não foi encontrado.")
+
+
     def exibe_menu(self, biblioteca):
         texto_menu_bibliotecario = (
             "1 - Listar Catalogo \n"
@@ -64,7 +85,9 @@ class Funcionario(Usuario):
             "6 - Cadastrar Usuario \n"
             "7 - Exibir catalogo de livros \n"
             "8 - Exibir cadastro de usuarios \n"
-            "9 - Logoff \n"
+            "9 - Remover livro do catalogo \n"
+            "10- Remover cadastro \n"
+            "11- Logoff \n"
             "0 - Sair \n"
         )
 
@@ -85,10 +108,10 @@ class Funcionario(Usuario):
                     print("Nenhum livro encontrado com esse título ou autor.")
             elif opcao == '3':
                 titulo = input("Digite o título do livro que deseja emprestar: ")
-                biblioteca.emprestar_livro(titulo)
+                biblioteca.emprestar_livro(titulo,Usuario)
             elif opcao == '4':
                 titulo = input("Digite o título do livro que deseja devolver: ")
-                biblioteca.devolver_livro(titulo)
+                biblioteca.devolver_livro(titulo,Usuario)
             elif opcao == '5':
                 self.cadastrar_livro(biblioteca)
             elif opcao == '6':
@@ -97,7 +120,12 @@ class Funcionario(Usuario):
                 biblioteca.listar_livros()
             elif opcao == '8':
                 self.imprimir_cadastro()
-            elif opcao == '9':
+            elif opcao == "9": 
+                self.remover_livro(biblioteca)
+            elif opcao == "10": 
+                input_cpf = input("Digite o CPF do Usuario que deseja desativar: ")
+                self.remover_usuario(input_cpf)
+            elif opcao == '11':
                 print("Realizando Logout...")
                 break
                 
