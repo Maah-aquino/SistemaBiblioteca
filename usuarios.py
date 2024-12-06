@@ -28,24 +28,15 @@ class Usuario:
         return biblioteca.buscar_livros(autor)
 
     def emprestar_livro(self, biblioteca):
-        titulo = input("Digite o título do livro que deseja emprestar: ")
-        resultados = biblioteca.buscar_livros(titulo)
-        if resultados:
-            livro = resultados[0]
-            livro.emprestar()  # Corrigido
-            biblioteca.salvar_catalogo()  # Corrigido
-        else:
-            print("Livro não encontrado.")
+         titulo = input("Digite o título do livro que deseja emprestar: ") 
+         biblioteca.emprestar_livro(titulo, self) # corrigido pela 34634634 vez
+         
+         
+    def devolver_livro(self, biblioteca): 
+        titulo = input("Digite o título do livro que deseja devolver: ") 
+        biblioteca.devolver_livro(titulo)
 
-    def devolver_livro(self, biblioteca, titulo):
-        resultados = biblioteca.buscar_livros(titulo)
-        if resultados:
-            livro = resultados[0]
-            livro.devolver()  # Corrigido
-            biblioteca.salvar_catalogo()  # Corrigido
-        else:
-            print("Livro não encontrado.")
-
+    
     def set_id(self, id_):
         self._id = id_
 
@@ -96,3 +87,4 @@ class Usuario:
         livros = biblioteca.listar_livros()
         for livro in livros:
             print(livro.mostrar_informacoes())
+
